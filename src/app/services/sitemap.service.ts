@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class SitemapService {
 
-  private apiUrl = 'https://example.com/api/products';
+  private apiUrl = 'https://dummyjson.com/products';
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +17,7 @@ export class SitemapService {
   }
 
   generateSitemapXml(products: any[]): string {
-    const baseUrl = 'https://example.com';
+    const baseUrl = 'https://dummyjson.com';
     const urls = products.map(product => `
       <url>
         <loc>${baseUrl}/products/${product.id}</loc>
