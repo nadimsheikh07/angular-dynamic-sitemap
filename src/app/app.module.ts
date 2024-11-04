@@ -20,7 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     SitemapComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     HttpClientModule
   ],
