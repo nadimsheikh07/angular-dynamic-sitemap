@@ -7,6 +7,9 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { existsSync } from 'fs';
+import { SitemapService } from 'src/app/services/sitemap.service';
+import { Injector } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -28,6 +31,21 @@ export function app(): express.Express {
   server.get('*.*', express.static(distFolder, {
     maxAge: '1y'
   }));
+
+
+  // Create a sitemap endpoint
+  server.get('/sitemap.xml', async (req, res) => {
+
+    const injector = Injector.create({providers: [{provide: SitemapService, deps: [HttpClientModule]}]});
+    const sitemapService = injector.get(SitemapService); // Get SitemapService from the injector
+    
+    const products = await sitemapService.fetchProducts().toPromise(); // Fetch products
+    const xml = sitemapService.generateSitemapXml(products); // Generate XML
+    
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  });
+
 
   // All regular routes use the Universal engine
   server.get('*', (req, res) => {
